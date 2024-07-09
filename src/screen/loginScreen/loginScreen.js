@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image, useWindowDimensions,  } from 'react-native'
+import { View, StyleSheet, Image, useWindowDimensions, Alert,  } from 'react-native'
 import React, { useState } from 'react'
 import Logo from '../../../assets/images/logo.png'
 import CustomInput from '../../component/CustomInput';
@@ -9,11 +9,13 @@ import { Pressable, Text } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const LoginScreen = () => {
+
+
+const LoginScreen = (props) => {
     const {height} =useWindowDimensions();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const navigation = useNavigation();
+ 
     const getData =async() => {
       try{
         
@@ -21,19 +23,22 @@ const LoginScreen = () => {
       const valueObj = getValue != null ? JSON.parse(getValue): null;
       const user= valueObj.username;
       const pass = valueObj.password;
-      if(user==username && pass == password){
-        console.warn(user,pass);
+      if(getValue == null){
+      Alert.alert('User Not Fond')
       }
       else{
-        console.warn('Not fond')
+        props.navigation.navigate('TabNavigator')
       }
       }catch(e){
         console.warn(e)
       }
     }
     const onSignUpPressed =() => {
-        navigation.navigate('Regiser')
+     props.navigation.navigate('Register')
+     
+   
     }
+
   
   return (
     <View style={styles.root}>
@@ -44,7 +49,6 @@ const LoginScreen = () => {
       <Pressable onPress={onSignUpPressed}>
         <Text>Create new account</Text>
       </Pressable>
-      {/* <CustomButton text="SigUp" onPress={onSignUpPressed}></CustomButton> */}
     </View>
   )
 };
