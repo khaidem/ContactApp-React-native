@@ -6,9 +6,7 @@ const AddContact = () => {
   return (
     <View style={{flex: 1}}>
       <View style={styles.root}>
-        <TouchableOpacity
-        
-        >
+        <TouchableOpacity>
             <AntIcon name='arrowleft' color='white'/>
         </TouchableOpacity>
       </View>

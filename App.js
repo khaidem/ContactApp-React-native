@@ -8,6 +8,7 @@ import TabNavigator from './src/PrivateRoute/tabNavigator';
 import LoginScreen from './src/screen/loginScreen/loginScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import Navigation from './src/component/Navigation';
+import RegisterScreen from './src/screen/RegisterScreen/registerScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,8 +18,8 @@ const App = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <NativeBaseProvider>
-       
-       <Navigation/>
+      <RegisterScreen></RegisterScreen>
+       {/* <Navigation/> */}
      
       </NativeBaseProvider>
     </SafeAreaView>

@@ -28,60 +28,97 @@ const RegisterScreen = ({navigation}) => {
 
   const storeData = async () => {
     try {
-     const  setValue = JSON.stringify({username, password, email});
+      const setValue = JSON.stringify({username, password, email});
 
-      await AsyncStorage.setItem('user', setValue)
-      console.log("save form register",setValue)
-      // navigation.replace('Register'); 
+      await AsyncStorage.setItem('user', setValue);
+      console.log('save form register', setValue);
+      // navigation.replace('Register');
       navigation.dispatch(StackActions.replace('Home'));
-      
     } catch (e) {
       console.warn('User create fail');
     }
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#e8ecf4'}}>
+      <View style={styles.container}></View>
       <ScrollView>
-        <View style={styles.root}>
-          {/* <Image source={Logo} style={[styles.logo, {height: height * 0.3}]} resizeMode='contain' /> */}
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <TouchableHighlight onPress={backPressed}>
-              <Icon name="arrow-left" color="black" size={50} />
-            </TouchableHighlight>
-            <Text style={styles.tittle}>Create Account for Free! </Text>
-          </View>
-
-          <CustomInput
-            placeholder="username"
-            value={username}
-            setvalue={setUsername}
-          />
-          <CustomInput placeholder="Email" value={email} setvalue={setEmail} />
-          <CustomInput
-            placeholder="Password"
-            value={password}
-            setvalue={setPassword}
-          />
-          <CustomButton text="Register" onPress={storeData}></CustomButton>
+        <View style={styles.header}>
+          <Text style={styles.title}>
+          Create Account for Free! </Text>
         </View>
+        <View style={styles.form}>
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>User name</Text>
+            <CustomInput
+              placeholder="username"
+              value={username}
+              setvalue={setUsername}
+            />
+          </View>
+          </View>
+          <View style={styles.form}>
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Gmail</Text>
+            <CustomInput
+              placeholder="Gmail"
+              value={username}
+              setvalue={setEmail}
+            />
+          </View>
+          </View>
+          <View style={styles.form}>
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Password</Text>
+            <CustomInput
+              placeholder="Password"
+              value={username}
+              setvalue={setPassword}
+            />
+          </View>
+          <CustomButton></CustomButton>
+          </View>
+         
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  root: {
-    alignItems: 'center',
-    padding: 20,
+  container: {
+    
+    paddingVertical: 10,
+    paddingHorizontal: 0,
+    alignContent: 'center',
+    justifyContent: 'center',
+    flexGrow: 0.4,
+   
   },
-  tittle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#851C60',
-    // margin: 18,
-    marginLeft: 10,
-    // justifyContent: 'space-between',
+  /** Header */
+  header: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1D2A32',
+    marginBottom: 6,
+  },
+  form: {
+    marginBottom: 10,
+    paddingHorizontal: 24,
+   
+  },
+  inputLabel: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#222',
+    marginBottom: 8,
+  },
+  input: {
+    marginBottom: 16,
   },
   logo: {
     width: '100%',

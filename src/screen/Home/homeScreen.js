@@ -84,7 +84,7 @@ const HomeScreen = (props) => {
             </Text>
           </HStack>
         </Box>} keyExtractor={item => item.id} />
-        <Fab  shadow={2} right={5} bottom={70} 
+        <Fab  shadow={2} right={5} bottom={70} onPress={navigation.navigated('')}
       size="sm" icon={<AntIcon  color="white" name="plus"  />} />
   </Box>
   
