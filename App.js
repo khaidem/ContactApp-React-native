@@ -17,9 +17,9 @@ const App = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <NativeBaseProvider>
-        <NavigationContainer>
+       
        <Navigation/>
-        </NavigationContainer>
+     
       </NativeBaseProvider>
     </SafeAreaView>
   );

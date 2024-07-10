@@ -23,7 +23,7 @@ const TabNavigator = () => {
         component={ProfileScreen}
         options={{
           tabBarIcon: ({color, size}) => {
-            return <Icon name="home" color={color} size={size} />;
+            return <Icon name="person" color={color} size={size} />;
           },
         }}
       />

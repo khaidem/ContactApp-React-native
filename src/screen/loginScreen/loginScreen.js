@@ -20,15 +20,14 @@ const LoginScreen = (props) => {
       try{
         
       const getValue= await  AsyncStorage.getItem('user');
-      const valueObj = getValue != null ? JSON.parse(getValue): null;
-      const user= valueObj.username;
-      const pass = valueObj.password;
-      if(getValue == null){
-      Alert.alert('User Not Fond')
-      }
-      else{
-        props.navigation.navigate('TabNavigator')
-      }
+      const userData = getValue != null ? JSON.parse(getValue): null;
+      // const user= valueObj.username;
+      // const pass = valueObj.password;
+      console.log(userData)
+      // if(getValue == null){
+      
+      // }
+     
       }catch(e){
         console.warn(e)
       }
