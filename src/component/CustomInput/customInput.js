@@ -5,7 +5,7 @@ const CustomInput = ({numeric,value, setvalue, placeholder, secureTextEntry}) =>
   return (
     
       <TextInput style={styles.inputControl} keyboardType={numeric} value={value} placeholder={placeholder} 
-      onChangeText={setvalue} secureTextEntry={secureTextEntry}></TextInput>
+      onChangeText={setvalue} secureTextEntry={secureTextEntry} ></TextInput>
   
   )
 }

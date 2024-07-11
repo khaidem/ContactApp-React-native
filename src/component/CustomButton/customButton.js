@@ -6,11 +6,9 @@ function customButton({onPress, text}) {
   return (
     <View style={styles.formAction}>
             <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-              }}>
+              onPress={onPress}>
               <View style={styles.btn}>
-                <Text style={styles.btnText}>Sign in</Text>
+                <Text style={styles.btnText}>{text}</Text>
               </View>
             </TouchableOpacity>
           </View>

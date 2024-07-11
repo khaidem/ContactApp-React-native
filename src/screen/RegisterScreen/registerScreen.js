@@ -28,14 +28,16 @@ const RegisterScreen = ({navigation}) => {
 
   const storeData = async () => {
     try {
-      const setValue = JSON.stringify({username, password, email});
+      // const setValue = JSON.stringify({username, password, email});
 
-      await AsyncStorage.setItem('user', setValue);
-      console.log('save form register', setValue);
+      await AsyncStorage.setItem('user', username);
+      await AsyncStorage.setItem('password', password);
+      await AsyncStorage.setItem('email', email);
+      console.log('save form register',email );
       // navigation.replace('Register');
       navigation.dispatch(StackActions.replace('Home'));
     } catch (e) {
-      console.warn('User create fail');
+      console.warn(e);
     }
   };
 
@@ -62,7 +64,7 @@ const RegisterScreen = ({navigation}) => {
             <Text style={styles.inputLabel}>Gmail</Text>
             <CustomInput
               placeholder="Gmail"
-              value={username}
+              value={email}
               setvalue={setEmail}
             />
           </View>
@@ -72,11 +74,11 @@ const RegisterScreen = ({navigation}) => {
             <Text style={styles.inputLabel}>Password</Text>
             <CustomInput
               placeholder="Password"
-              value={username}
+              value={password}
               setvalue={setPassword}
             />
           </View>
-          <CustomButton></CustomButton>
+          <CustomButton onPress={storeData} text={'Save'}></CustomButton>
           </View>
          
       </ScrollView>

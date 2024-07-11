@@ -1,97 +1,101 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Box, Button, Fab, FlatList, Heading, HStack,  } from 'native-base'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Box, Button, Fab, FlatList, Heading, HStack, VStack} from 'native-base';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import {Image} from 'react-native-svg';
+import {images} from '../../../assets/images/images.png';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
+import {FloatingAction} from 'react-native-floating-action';
 
+const HomeScreen = props => {
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const [contactList, setContactList] = useState([]);
 
-const HomeScreen = (props) => {
-  const data = [{
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-    fullName: "Aafreen Khan",
-    timeStamp: "12:47 PM",
-    recentText: "Good Day!",
-  }, {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-    fullName: "Sujitha Mathur",
-    timeStamp: "11:11 PM",
-    recentText: "Cheer up, there!",
-  }, {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    fullName: "Anci Barroco",
-    timeStamp: "6:22 PM",
-    recentText: "Good Day!",
-  }, {
-    id: "68694a0f-3da1-431f-bd56-142371e29d72",
-    fullName: "Aniket Kumar",
-    timeStamp: "8:56 PM",
-    recentText: "All the best",
-  }, {
-    id: "28694a0f-3da1-471f-bd96-142456e29d72",
-    fullName: "Kiara",
-    timeStamp: "12:47 PM",
-    recentText: "I will call today.",
-  }];
-   const [count,setCount]=useState(0)
-  useEffect(()=>{
-     const userData=getData();
- 
-     console.log(">>>>>>>>>>>>>user ",userData)
-    //  if(true){
-    //   props.navigation.navigate('Login')
-    //  }
-
-  },[props.navigation])
-
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    getData();
+  }, [isFocused]);
   const getData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('user');
-       jsonValue != null ? JSON.parse(jsonValue) : null;
-       console.log("Home Check",jsonValue)
-       return jsonValue;
-      
-    } catch (e) {
-      // error reading value
-    }
+    // const user = await AsyncStorage.getItem('user');
+    // const pass = await AsyncStorage.getItem('password');
+    // if(user !=null || pass != null){
+    //   navigation.navigate('Home')
+
+    // }else {
+    //   navigation.navigate('Login')
+    // }
+    const contactData = await AsyncStorage.getItem('contact');
+    setContactList(JSON.parse(contactData));
+    console.log("Check Form Home",JSON.parse(contactData));
   };
   return (
-    
     <Box padding="5">
-    <Heading fontSize="xl">
-      Contact List
-    </Heading>
-    <FlatList data={data} renderItem={({
-    item
-  }) => <Box borderBottomWidth="1" _dark={{
-    borderColor: "muted.50"
-  }} borderColor="muted.800" pl={["0", "4"]} pr={["0", "5"]} py="2">
-          <HStack space={2} justifyContent="space-between">
-            
-              <Text _dark={{
-          color: "warmGray.50"
-        }} color="coolGray.800" bold>
-                {item.fullName}
-              </Text>
-              <Text color="coolGray.600" _dark={{
-          color: "warmGray.200"
+      <Heading fontSize="xl">Contact List</Heading>
+      <FlatList
+        data={contactList}
+        renderItem={({item, index}) => {
+          return (
+            <View
+              style={{
+                width: '90%',
+                height: 50,
+                alignSelf: 'center',
+                borderRadius: 10,
+                marginTop: 10,
+                borderWidth: 1,
+                flexDirection: 'row',
+                paddingLeft: 10,
+                alignItems: 'center',
+              }}>
+              <Text>{item.name.toUpperCase()}</Text>
+              <Text style={{marginLeft: 20}}>{item.mobile}</Text>
+            </View>
+          );
+        }}></FlatList>
+
+      <TouchableOpacity
+        style={{
+          borderWidth: 1,
+          borderColor: 'red',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: 70,
+          position: 'absolute',
+          top: 650,
+          right: 20,
+          height: 70,
+          backgroundColor: 'red',
+          borderRadius: 100,
+        }}
+        onPress={() => {
+          navigation.navigate('AddContact');
         }}>
-                {item.recentText}
-              </Text>
-            <Text fontSize="xs" _dark={{
-        color: "warmGray.50"
-      }} color="coolGray.800" alignSelf="flex-start">
-              {item.timeStamp}
-            </Text>
-          </HStack>
-        </Box>} keyExtractor={item => item.id} />
-        <Fab  shadow={2} right={5} bottom={70} onPress={navigation.navigated('')}
-      size="sm" icon={<AntIcon  color="white" name="plus"  />} />
-  </Box>
-  
-  )
-  
-}
+        <Text style={{color: 'white'}}>Add</Text>
+      </TouchableOpacity>
+    </Box>
+  );
+};
 
-export default HomeScreen
+export default HomeScreen;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    shadowColor: '#cccccc',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 1,
+    backgroundColor: '#fff',
+    marginBottom: 10,
+  },
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+});

@@ -9,6 +9,7 @@ import LoginScreen from './src/screen/loginScreen/loginScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import Navigation from './src/component/Navigation';
 import RegisterScreen from './src/screen/RegisterScreen/registerScreen';
+import AddContact from './src/screen/Contact/addContact';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,8 +19,10 @@ const App = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <NativeBaseProvider>
-      <RegisterScreen></RegisterScreen>
-       {/* <Navigation/> */}
+        
+   
+     
+       <Navigation/>
      
       </NativeBaseProvider>
     </SafeAreaView>
