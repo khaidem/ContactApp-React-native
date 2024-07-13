@@ -2,27 +2,37 @@ import {
   View,
   StyleSheet,
   Image,
+  Text,
   useWindowDimensions,
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import Logo from '../../../assets/images/logo.png';
 import CustomInput from '../../component/CustomInput';
 
 import CustomButton from '../../component/CustomButton';
-import {useNavigation} from '@react-navigation/native';
-import {Text} from 'native-base';
+
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
-const LoginScreen = props => {
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+function LoginScreen({ navigation }){
   const {height} = useWindowDimensions();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigation = useNavigation();
-
  
+
+  const saveData = async () => {
+    try {
+      await AsyncStorage.setItem('user', JSON.stringify({username,password}));
+      // await AsyncStorage.setItem('password', password);
+      // navigation.navigate('Home');
+    } catch (erro) {
+      console.log(e);
+    }
+  };
 
   const onSignUpPressed = () => {
     navigation.navigate('Register');
@@ -67,7 +77,11 @@ const LoginScreen = props => {
                 secureTextEntry={true}
               />
             </View>
-            <CustomButton text={'SigIn'}></CustomButton>
+            <CustomButton
+              text={'SigIn'}
+              onPress={() => {
+                saveData();
+              }}></CustomButton>
           </View>
         </KeyboardAwareScrollView>
 

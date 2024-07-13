@@ -1,29 +1,41 @@
-import {StyleSheet, Text, View, Button, SafeAreaView} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import {NativeBaseProvider} from 'native-base';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useEffect} from 'react';
-import TabNavigator from './src/PrivateRoute/tabNavigator';
+
+
 import LoginScreen from './src/screen/loginScreen/loginScreen';
-import {NavigationContainer} from '@react-navigation/native';
-import Navigation from './src/component/Navigation';
-import RegisterScreen from './src/screen/RegisterScreen/registerScreen';
-import AddContact from './src/screen/Contact/addContact';
+
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { NavigationContainer, TabRouter } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 // Short Cut for renfes => reactNative
 const App = () => {
-
+  const[isLogged, setIsLogged] = useState(false);
+  const _retriveData = async() =>{
+    try{
+      const data = await AsyncStorage.getItem('user');
+      console.log(data);
+      setIsLogged(data);
+    }catch(e){}
+  }
+  useEffect(()=>{
+    _retriveData();
+  })
   return (
     <SafeAreaView style={{flex: 1}}>
       <NativeBaseProvider>
-        
-   
-     
-       <Navigation/>
-     
+        <NavigationContainer>
+        {isLogged?<TabRouter></TabRouter>: <LoginScreen></LoginScreen> }
+        </NavigationContainer>
+      
+     {/* <Navigation></Navigation> */}
+
+      
       </NativeBaseProvider>
     </SafeAreaView>
   );

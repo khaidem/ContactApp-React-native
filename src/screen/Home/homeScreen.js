@@ -1,101 +1,155 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Box, Button, Fab, FlatList, Heading, HStack, VStack} from 'native-base';
+import {
+  Box,
+  Button,
+  Center,
+  Fab,
+  FlatList,
+  Heading,
+  HStack,
+  SectionList,
+  StatusBar,
+  VStack,
+} from 'native-base';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import {Image} from 'react-native-svg';
-import {images} from '../../../assets/images/images.png';
+
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {FloatingAction} from 'react-native-floating-action';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const HomeScreen = props => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const [contactList, setContactList] = useState([]);
+  const [contactL, setContactList] = useState([]);
 
-  const [count, setCount] = useState(0);
   useEffect(() => {
     getData();
   }, [isFocused]);
   const getData = async () => {
-    // const user = await AsyncStorage.getItem('user');
-    // const pass = await AsyncStorage.getItem('password');
-    // if(user !=null || pass != null){
-    //   navigation.navigate('Home')
-
-    // }else {
-    //   navigation.navigate('Login')
-    // }
     const contactData = await AsyncStorage.getItem('contact');
-    setContactList(JSON.parse(contactData));
-    console.log("Check Form Home",JSON.parse(contactData));
-  };
-  return (
-    <Box padding="5">
-      <Heading fontSize="xl">Contact List</Heading>
-      <FlatList
-        data={contactList}
-        renderItem={({item, index}) => {
-          return (
-            <View
-              style={{
-                width: '90%',
-                height: 50,
-                alignSelf: 'center',
-                borderRadius: 10,
-                marginTop: 10,
-                borderWidth: 1,
-                flexDirection: 'row',
-                paddingLeft: 10,
-                alignItems: 'center',
-              }}>
-              <Text>{item.name.toUpperCase()}</Text>
-              <Text style={{marginLeft: 20}}>{item.mobile}</Text>
-            </View>
-          );
-        }}></FlatList>
+    const contactList = JSON.parse(contactData);
+    console.log('Check Form ContactList', contactList);
 
+    setContactList(groupContactByFirstChar(contactList));
+  };
+  // Function to group contacts by the first character of their name
+  function groupContactByFirstChar(contactList) {
+    const groupedContacts = {};
+    contactList.forEach(e => {
+      const firstchar = e.name.charAt(0).toUpperCase();
+      if (!groupedContacts[firstchar]) {
+        groupedContacts[firstchar] = [];
+      }
+      groupedContacts[firstchar].push(e);
+    });
+    console.log('Check groupContact', groupedContacts);
+
+    const groupArray = Object.keys(groupedContacts)
+      .sort()
+      .map(firstchar => ({
+        title: firstchar,
+        data: groupedContacts[firstchar],
+      }));
+    console.log('Check GroupArray', groupArray);
+    return groupArray;
+  }
+
+  return (
+    <View style={styles.viewStyle}>
+      <Heading fontSize="xl">Contact List</Heading>
+      <SectionList
+        sections={contactL}
+        keyExtractor={(item, index) => item.mobile + index}
+        renderItem={({item}) => (
+          <View style={styles.item}>
+            <Text>
+              Name : <Text style={styles.textStyle}>{item.name}</Text>
+            </Text>
+            <Text>
+              Mobile : <Text style={styles.textStyle}>{item.mobile}</Text>
+            </Text>
+          </View>
+        )}
+        renderSectionHeader={({section: {title}}) => (
+          <View style={styles.header}>
+            <Text style={styles.headerText}>{title}</Text>
+          </View>
+        )}></SectionList>
       <TouchableOpacity
-        style={{
-          borderWidth: 1,
-          borderColor: 'red',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 70,
-          position: 'absolute',
-          top: 650,
-          right: 20,
-          height: 70,
-          backgroundColor: 'red',
-          borderRadius: 100,
-        }}
+        style={styles.styleButton}
         onPress={() => {
           navigation.navigate('AddContact');
         }}>
         <Text style={{color: 'white'}}>Add</Text>
       </TouchableOpacity>
-    </Box>
+    </View>
+    // <Box padding="5">
+    //   <Heading fontSize="xl">Contact List</Heading>
+    //   <SectionList
+    //     sections={contactL}
+    //     keyExtractor={(item, index) => item.mobile + index}
+    //     renderItem={({item}) =>   <View style={styles.item}>
+    //     <Text>{item.name} - {item.mobile}</Text>
+    // </View>}
+    //     renderSectionHeader={({ section: { title } }) => (
+    //       <View style={styles.header}>
+    //           <Text style={styles.headerText}>{title}</Text>
+    //       </View>
+    //   )}
+    //     >
+
+    //     </SectionList>
+    //     <TouchableOpacity
+    //     style={styles.styleButton}
+    //     onPress={() => {
+    //       navigation.navigate('AddContact');
+    //     }}>
+    //     <Text style={{color: 'white'}}>Add</Text>
+    //   </TouchableOpacity>
+
+    // </Box>
   );
 };
 
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    shadowColor: '#cccccc',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 1,
-    backgroundColor: '#fff',
-    marginBottom: 10,
+  textStyle: {
+    color: 'black',
   },
-  image: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+  viewStyle: {
+    padding: 20,
+  },
+  item: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  header: {
+    padding: 10,
+    backgroundColor: '#f4f4f4',
+  },
+  headerText: {
+    fontWeight: 'bold',
+  },
+  container: {
+    flex: 1,
+    paddingTop: StatusBar.currentHeight,
+    marginHorizontal: 16,
+  },
+  styleButton: {
+    borderWidth: 1,
+    borderColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 70,
+    position: 'absolute',
+    top: 650,
+    right: 20,
+    height: 70,
+    backgroundColor: 'red',
+    borderRadius: 100,
   },
 });
