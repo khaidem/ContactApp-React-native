@@ -17,25 +17,27 @@ import CustomButton from '../../component/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-function LoginScreen({ navigation }){
+import { useNavigation } from '@react-navigation/native';import { Button } from 'native-base';
+function LoginScreen(){
   const {height} = useWindowDimensions();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigation = useNavigation();
  
 
   const saveData = async () => {
     try {
       await AsyncStorage.setItem('user', JSON.stringify({username,password}));
-      // await AsyncStorage.setItem('password', password);
-      // navigation.navigate('Home');
+      
+      navigation.navigate('Home');
     } catch (erro) {
-      console.log(e);
+      console.log(erro);
     }
   };
 
   const onSignUpPressed = () => {
-    navigation.navigate('Register');
+    console.log("checkUp",navigation);
+    navigation.navigate('Register')
   };
 
   return (
@@ -84,8 +86,8 @@ function LoginScreen({ navigation }){
               }}></CustomButton>
           </View>
         </KeyboardAwareScrollView>
-
-        <TouchableOpacity onPress={onSignUpPressed} style={{marginTop: 'auto'}}>
+       
+        <TouchableOpacity onPress={onSignUpPressed } style={{marginTop: 'auto'}}>
           <Text style={styles.formFooter}>
             Don't have an account?{' '}
             <Text style={{textDecorationLine: 'underline'}}>Sign up</Text>

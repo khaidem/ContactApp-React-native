@@ -19,9 +19,7 @@ import {NativeBaseProvider, Box, IconButton, ScrollView} from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegisterScreen = ({navigation}) => {
-  const backPressed = () => {
-    navigation.goBack();
-  };
+ 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,7 +32,7 @@ const RegisterScreen = ({navigation}) => {
       await AsyncStorage.setItem('password', password);
       await AsyncStorage.setItem('email', email);
       console.log('save form register',email );
-      // navigation.replace('Register');
+     
       navigation.dispatch(StackActions.replace('Home'));
     } catch (e) {
       console.warn(e);
