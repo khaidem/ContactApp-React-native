@@ -27,7 +27,8 @@ function LoginScreen(){
 
   const saveData = async () => {
     try {
-      await AsyncStorage.setItem('user', JSON.stringify({username,password}));
+     const data = await AsyncStorage.setItem('user', JSON.stringify({username,password}));
+      
       
       navigation.navigate('Home');
     } catch (erro) {
