@@ -7,38 +7,52 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import React, { useState} from 'react';
+import React, {useState} from 'react';
 import Logo from '../../../assets/images/logo.png';
 import CustomInput from '../../component/CustomInput';
-
 import CustomButton from '../../component/CustomButton';
-
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import { NavigationContainer } from '@react-navigation/native';
-import { useNavigation } from '@react-navigation/native';import { Button } from 'native-base';
-function LoginScreen(){
+
+import {useNavigation} from '@react-navigation/native';
+import routes from '../../constants/routes';
+
+import {useDispatch} from 'react-redux';
+import { login } from '../../reducer/auth';
+
+const LoginScreen =() => {
   const {height} = useWindowDimensions();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
- 
+  const dispatch = useDispatch();
 
-  const saveData = async () => {
-    try {
-     const data = await AsyncStorage.setItem('user', JSON.stringify({username,password}));
-      
-      
-      navigation.navigate('Home');
-    } catch (erro) {
-      console.log(erro);
-    }
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+
+    dispatch(login({
+      Username: username,
+      Password: password,
+    }));
+   await AsyncStorage.setItem('user', JSON.stringify({username,password}));
+
+  //  navigation.dispatch(StackActions.replace('Home'));
   };
 
+  // For Login
+  // const saveData = async () => {
+  //   try {
+  //    const data = await AsyncStorage.setItem('user', JSON.stringify({username,password}));
+
+  //     navigation.navigate('Home');
+  //   } catch (erro) {
+  //     console.log(erro);
+  //   }
+  // };
+
   const onSignUpPressed = () => {
-    console.log("checkUp",navigation);
-    navigation.navigate('Register')
+  
+    navigation.navigate('Register');
   };
 
   return (
@@ -80,15 +94,11 @@ function LoginScreen(){
                 secureTextEntry={true}
               />
             </View>
-            <CustomButton
-              text={'SigIn'}
-              onPress={() => {
-                saveData();
-              }}></CustomButton>
+            <CustomButton text={'SigIn'} onPress={(e)=> handleSubmit(e)}></CustomButton>
           </View>
         </KeyboardAwareScrollView>
-       
-        <TouchableOpacity onPress={onSignUpPressed } style={{marginTop: 'auto'}}>
+
+        <TouchableOpacity onPress={onSignUpPressed} style={{marginTop: 'auto'}}>
           <Text style={styles.formFooter}>
             Don't have an account?{' '}
             <Text style={{textDecorationLine: 'underline'}}>Sign up</Text>
@@ -97,7 +107,7 @@ function LoginScreen(){
       </View>
     </SafeAreaView>
   );
-};
+}
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 24,

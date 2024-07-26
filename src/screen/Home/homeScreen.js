@@ -2,15 +2,12 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  Alert,
-  AlertDialog,
-  Button,
+ 
   Divider,
-  FormControl,
+
   Heading,
   HStack,
-  Input,
-  Modal,
+ 
   SectionList,
   StatusBar,
   VStack,
@@ -18,14 +15,13 @@ import {
 import AntIcon from 'react-native-vector-icons/AntDesign';
 
 import {useNavigation, useIsFocused} from '@react-navigation/native';
-// import {FloatingAction} from 'react-native-floating-action'
-import {SafeAreaView} from 'react-native-safe-area-context';
 
 const HomeScreen = props => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
 
   const [contactL, setContactList] = useState([]);
+
 
  
 

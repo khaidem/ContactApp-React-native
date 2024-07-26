@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from 'react';
-
+import  {React, useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screen/Home/homeScreen';
 import ProfileScreen from '../screen/ProfileScreen/profileScreen';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LoginScreen from '../screen/loginScreen/loginScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Heading, HStack, Spinner, VStack } from 'native-base';
+
+import { ActivityIndicator,  } from 'react-native';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../reducer/auth';
+
 const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
+// const user = useSelector((state)=> {state.user});
+
   const[isLogged, setIsLogged] = useState(false);
   const[isLoading, setLoading] = useState(true);
   const _retriveData = async() =>{
@@ -23,15 +28,10 @@ const TabNavigator = () => {
     _retriveData();
   })
   if(isLoading){
-    return <VStack space={2} justifyContent="center" alignItems={'center'}  top={100}>
-    <Spinner accessibilityLabel="Loading" />
-    <Heading color="primary.500" fontSize="xl">
-      Loading
-    </Heading>
-  </VStack>;
+    return <ActivityIndicator></ActivityIndicator>
   }
   return (
-    isLogged?
+    isLogged ?
     <Tab.Navigator screenOptions={{headerShown: false}}>
       <Tab.Screen
         name="HomeScreen"
@@ -53,7 +53,7 @@ const TabNavigator = () => {
         }}
       />
     </Tab.Navigator>
-  : <LoginScreen></LoginScreen>);
-};
+  : <LoginScreen></LoginScreen>
+   )   }
 
 export default TabNavigator;

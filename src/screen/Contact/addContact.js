@@ -1,21 +1,24 @@
-import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
+import {StyleSheet,  View, Text} from 'react-native';
 import React, {useState} from 'react';
-import AntIcon from 'react-native-vector-icons/AntDesign';
 import CustomInput from '../../component/CustomInput';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'native-base';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
-
 import CustomButton from '../../component/CustomButton';
-import {color} from 'native-base/lib/typescript/theme/styled-system';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+
+
 let contact = [];
 const AddContact = () => {
   const [username, setUsername] = useState('');
   const [PhoneNumber, setEmail] = useState('');
   const navigation = useNavigation();
-  const [formData, setData] = React.useState({});
+ 
   const [error, setError] = useState({});
+
+ 
 
   const validateForm = () => {
     let error = {};
