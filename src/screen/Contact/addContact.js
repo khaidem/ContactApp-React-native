@@ -1,5 +1,5 @@
 import {StyleSheet,  View, Text} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CustomInput from '../../component/CustomInput';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'native-base';
@@ -13,11 +13,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 let contact = [];
 const AddContact = () => {
   const [username, setUsername] = useState('');
-  const [PhoneNumber, setEmail] = useState('');
+  const [PhoneNumber, setPhone] = useState('');
   const navigation = useNavigation();
  
   const [error, setError] = useState({});
-
+  const [isEdit, setEdit] = useState(false);
+  useEffect(()=> {
+    if(isEdit== true){
+     
+      setUsername(username)
+      setPhone(PhoneNumber)
+    }
+  }, [isEdit]);
  
 
   const validateForm = () => {
@@ -32,24 +39,14 @@ const AddContact = () => {
     if (validateForm()) {
       contact.push({name: username, mobile: PhoneNumber});
       await AsyncStorage.setItem('contact', JSON.stringify(contact));
-
+      
       setUsername('');
-      setEmail('');
+      setPhone('');
       setError({});
 
       navigation.goBack();
     }
-    // let tempContact =[];
-    // let x =JSON.parse(await AsyncStorage.getItem('contact'));
-    // tempContact=x;
-    // tempContact.map((item)=> {
-    //   contact.push(item);
-    // })
-    // contact.push({name : username, mobile :PhoneNumber});
-
-    // await AsyncStorage.setItem('contact', JSON.stringify(contact));
-    // console.log("Check form AddContact",contact);
-    // navigation.goBack();
+  
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#e8ecf4'}}>
@@ -77,7 +74,7 @@ const AddContact = () => {
             <CustomInput
               placeholder="Phone"
               value={PhoneNumber}
-              setvalue={setEmail}
+              setvalue={setPhone}
               numeric={'number-pad'}
             />
           </View>

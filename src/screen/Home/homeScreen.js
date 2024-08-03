@@ -2,12 +2,10 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
- 
+  Button,
   Divider,
-
   Heading,
   HStack,
- 
   SectionList,
   StatusBar,
   VStack,
@@ -15,6 +13,8 @@ import {
 import AntIcon from 'react-native-vector-icons/AntDesign';
 
 import {useNavigation, useIsFocused} from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../reducer/auth';
 
 const HomeScreen = props => {
   const navigation = useNavigation();
@@ -22,14 +22,13 @@ const HomeScreen = props => {
 
   const [contactL, setContactList] = useState([]);
 
-
- 
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getData();
   }, [isFocused]);
   const getData = async () => {
-    const contactData = await AsyncStorage.getItem('contact');  
+    const contactData = await AsyncStorage.getItem('contact');
     const contactList = JSON.parse(contactData);
 
     setContactList(groupContactByFirstChar(contactList));
@@ -57,44 +56,58 @@ const HomeScreen = props => {
   }
 
   //Function to delete Item form array one by one
-  const deleteContact = async mobile => {
+  const deleteContact = async (mobile) => {
     try {
       const contactD = await AsyncStorage.getItem('contact');
-      const contactUp = JSON.parse(contactD);
+      let d = [];
+      if(contactD !== null) d =JSON.parse(contactD)
+    
 
-      const update = contactUp.filter(function (e) {
-        return e.mobile !== mobile;
-      });
+      const update = d.filter(n => n.mobile !== mobile)
+      setContactList(update);
       console.log('Check UpDate', update);
       await AsyncStorage.setItem('contact', JSON.stringify(update));
-      setContactList(update);
+     
     } catch (error) {
       console.error(error);
     }
   };
 
   //Function to edit the Item form async Storage
-  const editContact = async (userName, usermobile) => {
-    const editData = await AsyncStorage.getItem('contact');
-    let contactUpdate =[];
-    if(editData !== null)
-      contactUpdate = JSON.parse(editData);
-      const updateContact = contactUpdate.filter(n => {
-        if(n.mobile === contactUpdate.mobile){
-          n.name = userName
-          n.mobile = usermobile
-        }
-        return n;
-      })
-      
-      setContactList(updateContact);
-    await AsyncStorage.setItem('contact', JSON.stringify(updateContact))
+  // const editContact = async (userName, usermobile) => {
+  //   const editData = await AsyncStorage.getItem('contact');
+  //   let contactUpdate = [];
+  //   if (editData !== null) contactUpdate = JSON.parse(editData);
+  //   const updateContact = contactUpdate.filter(n => {
+  //     if (n.mobile === contactUpdate.mobile) {
+  //       n.name = userName;
+  //       n.mobile = usermobile;
+  //     }
+  //     return n;
+  //   });
+
+  //   setContactList(updateContact);
+  //   await AsyncStorage.setItem('contact', JSON.stringify(updateContact));
+  // };
+
+  const handleLogout= (e)=> {
+    e.preventDefault();
+    dispatch(logout());
+    AsyncStorage.removeItem('user');
+    navigation.navigate('Login');
     
   }
 
   return (
     <View style={styles.viewStyle}>
-      <Heading fontSize="30">Contact List</Heading>
+      <HStack justifyContent={'space-between'}>
+        <VStack>
+          <Heading fontSize="30">Contact List</Heading>
+        </VStack>
+
+        <Button onPress={(e)=>handleLogout(e)}>Logout</Button>
+      </HStack>
+
       <Divider
         my="2"
         _light={{
@@ -120,10 +133,11 @@ const HomeScreen = props => {
                 </Text>
               </VStack>
               <HStack space={4}>
-                <TouchableOpacity onPress={()=> navigation.navigate('AddContact')} >
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('AddContact')}>
                   <AntIcon name="edit" color="green" size={20}></AntIcon>
                 </TouchableOpacity>
-              
+
                 <TouchableOpacity onPress={() => deleteContact(item.mobile)}>
                   <AntIcon name="delete" color="black" size={20}></AntIcon>
                 </TouchableOpacity>

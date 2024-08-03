@@ -18,40 +18,40 @@ import {useNavigation} from '@react-navigation/native';
 import routes from '../../constants/routes';
 
 import {useDispatch} from 'react-redux';
-import { login } from '../../reducer/auth';
+import {login} from '../../reducer/auth';
 
-const LoginScreen =() => {
+const LoginScreen = () => {
   const {height} = useWindowDimensions();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
+  const [error, setError] = useState({});
   const dispatch = useDispatch();
 
-  const handleSubmit = async(e) => {
-    e.preventDefault();
-
-    dispatch(login({
-      Username: username,
-      Password: password,
-    }));
-   await AsyncStorage.setItem('user', JSON.stringify({username,password}));
-
-  //  navigation.dispatch(StackActions.replace('Home'));
+  const validateForm = () => {
+    let error = {};
+    if (!username) error.username = 'UserName is required';
+    if (!password) error.password = 'password is required';
+    setError(error);
+    return Object.keys(error).length === 0;
   };
 
-  // For Login
-  // const saveData = async () => {
-  //   try {
-  //    const data = await AsyncStorage.setItem('user', JSON.stringify({username,password}));
+  const handleSubmit = async (e) => {
+    if (validateForm()) {
+      e.preventDefault();
 
-  //     navigation.navigate('Home');
-  //   } catch (erro) {
-  //     console.log(erro);
-  //   }
-  // };
+      dispatch(
+        login({
+          Username: username,
+          Password: password,
+        }),
+      );
+      await AsyncStorage.setItem('user', JSON.stringify({username, password}));
 
+      navigation.navigate('Home');
+    }
+  };
   const onSignUpPressed = () => {
-  
     navigation.navigate('Register');
   };
 
@@ -83,6 +83,9 @@ const LoginScreen =() => {
                 value={username}
                 setvalue={setUsername}
               />
+              {error.username ? (
+                <Text style={styles.errorText}>{error.username}</Text>
+              ) : null}
             </View>
 
             <View style={styles.input}>
@@ -93,8 +96,13 @@ const LoginScreen =() => {
                 setvalue={setPassword}
                 secureTextEntry={true}
               />
+              {error.username ? (
+                <Text style={styles.errorText}>{error.password}</Text>
+              ) : null}
             </View>
-            <CustomButton text={'SigIn'} onPress={(e)=> handleSubmit(e)}></CustomButton>
+            <CustomButton
+              onPress={e => handleSubmit(e)}
+              text={'SigIn'}></CustomButton>
           </View>
         </KeyboardAwareScrollView>
 
@@ -107,7 +115,7 @@ const LoginScreen =() => {
       </View>
     </SafeAreaView>
   );
-}
+};
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 24,
@@ -115,6 +123,10 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
   },
   title: {
     fontSize: 20,

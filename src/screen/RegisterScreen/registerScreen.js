@@ -26,21 +26,33 @@ const RegisterScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
+  const [error, setError] = useState({});
  
 
+  const validateForm = () => {
+    let error = {};
+    if (!username) error.username = 'UserName is required';
+    if (!email) error.email = 'Email is required';
+    if(!password) error.password = 'password is required';
+    setError(error);
+    return Object.keys(error).length === 0;
+  };
   const handleRegister = async (e) => {
-    e.preventDefault();
+    if(validateForm()){
+      e.preventDefault();
  
-    dispatch(
-      register({
-        username: username,
-        email: email,
-        password: password,
-      }),
-    );
-   const Data =await AsyncStorage.setItem('user', JSON.stringify({username,password}));
-   console.log("Save register", Data)
-    navigation.dispatch(StackActions.replace('Home'));
+      dispatch(
+        register({
+          username: username,
+          email: email,
+          password: password,
+        }),
+      );
+     const Data =await AsyncStorage.setItem('user', JSON.stringify({username,password}));
+     console.log("Save register", Data)
+      navigation.dispatch(StackActions.replace('Home'));
+    }
+  
   };
 
   // const storeData = async () => {
@@ -73,7 +85,11 @@ const RegisterScreen = ({navigation}) => {
               value={username}
               setvalue={setUsername}
             />
+            
           </View>
+          {error.username ? (
+            <Text style={styles.errorText}>{error.username}</Text>
+          ) : null}
         </View>
         <View style={styles.form}>
           <View style={styles.input}>
@@ -84,6 +100,9 @@ const RegisterScreen = ({navigation}) => {
               setvalue={setEmail}
             />
           </View>
+          {error.username ? (
+            <Text style={styles.errorText}>{error.email}</Text>
+          ) : null}
         </View>
         <View style={styles.form}>
           <View style={styles.input}>
@@ -94,6 +113,9 @@ const RegisterScreen = ({navigation}) => {
               setvalue={setPassword}
             />
           </View>
+          {error.username ? (
+            <Text style={styles.errorText}>{error.password}</Text>
+          ) : null}
           <CustomButton onPress={(e) => handleRegister(e)} text={'Save'}></CustomButton>
         </View>
       </ScrollView>
@@ -120,6 +142,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1D2A32',
     marginBottom: 6,
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
   },
   form: {
     marginBottom: 10,
